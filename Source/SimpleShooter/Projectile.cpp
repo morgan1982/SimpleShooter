@@ -12,7 +12,7 @@ AProjectile::AProjectile()
 	PrimaryActorTick.bCanEverTick = true;
 
 	CollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere Collision"));
-	CollisionSphere->InitSphereRadius(20.0f);
+	CollisionSphere->InitSphereRadius(10.0f);
 
 	// sets the sphere as the root of all other components that might be added to the class 
 	RootComponent = CollisionSphere;
@@ -20,8 +20,12 @@ AProjectile::AProjectile()
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movemement"));
 
 	ProjectileMovement->UpdatedComponent = CollisionSphere;
-	ProjectileMovement->InitialSpeed = ProjectileInitialSpeed;
-	ProjectileMovement->MaxSpeed = ProjectileMaxSpeed;
+	// TODO: adjustment from the user is not working for initial and max speed. 
+	//ProjectileMovement->InitialSpeed = ProjectileInitialSpeed;
+	//ProjectileMovement->MaxSpeed = ProjectileMaxSpeed;
+	
+	ProjectileMovement->InitialSpeed = 2000.0f;
+	ProjectileMovement->MaxSpeed = 6000.0f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
 

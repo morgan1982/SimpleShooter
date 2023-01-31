@@ -7,6 +7,11 @@
 #include "Components/InputComponent.h"
 #include "GameFramework/CharacterMovementComponent.h"
 
+#include "Projectile.h"
+#include "Animation/AnimInstance.h"
+#include "Kismet/GameplayStatics.h"
+#include "MonsterShooterGameMode.h"
+
 // Sets default values
 AMonsterShooterCharacter::AMonsterShooterCharacter()
 {
@@ -53,7 +58,8 @@ AMonsterShooterCharacter::AMonsterShooterCharacter()
 void AMonsterShooterCharacter::BeginPlay()
 {
 	Super::BeginPlay();
-
+	
+	// todo: remove 
 	AActor* MyActor = GetOwner();
 
 	if (MyActor)
@@ -62,6 +68,9 @@ void AMonsterShooterCharacter::BeginPlay()
 	}
 
 	GunMesh->AttachToComponent(HandsMesh, FAttachmentTransformRules::SnapToTargetNotIncludingScale, TEXT("GripPoint"));
+
+	World = GetWorld();
+	AnimInstance = HandsMesh->GetAnimInstance();
 	
 }
 
@@ -87,9 +96,33 @@ void AMonsterShooterCharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 	PlayerInputComponent->BindAxis("Turn", this, &AMonsterShooterCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMonsterShooterCharacter::LookAtRate);
-}
+} 
 void AMonsterShooterCharacter::OnFire()
 {
+	if (World != NULL)
+	{
+		SpawnRotation = GetControlRotation();
+
+		SpawnLocation = ((MuzzleLocation != nullptr) ?
+			MuzzleLocation->GetComponentLocation()   :
+			GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
+
+		FActorSpawnParameters ActorSpawnParams;
+		ActorSpawnParams.SpawnCollisionHandlingOverride =
+			ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButDontSpawnIfColliding; // if there is collision problems it will try to spawn nearby if it is possible
+
+		World->SpawnActor<AProjectile>(Projectile, SpawnLocation, SpawnRotation, ActorSpawnParams);
+
+		if (FireSound != NULL)
+		{
+			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+		}
+
+		if (FireAnimation != NULL && AnimInstance != NULL)
+		{
+			AnimInstance->Montage_Play(FireAnimation, 1.0f);
+		}
+	}
 }
 
 void AMonsterShooterCharacter::OnAlterFire()
