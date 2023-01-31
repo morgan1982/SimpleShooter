@@ -47,6 +47,9 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Gameplay)
 		FVector GunOffset;
 
+	UPROPERTY(EditAnywhere)
+		float JumpMovement = 1.0f;
+
 protected:
 
 	void OnFire();
