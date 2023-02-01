@@ -64,8 +64,8 @@ protected:
 	// projectile props
 public:
 	UPROPERTY(EditDefaultsOnly, Category = Projectile)
-		TSubclassOf<class AProjectile> Projectile;
-
+		TSubclassOf<class AProjectile> Projectile;	
+	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
 		class USoundBase* FireSound;	
 	
@@ -77,6 +77,8 @@ public:
 
 	class UAnimInstance* AnimInstance;
 	class UWorld* World;
+
+	//TSubclassOf<class AProjectile> MyProjectile;
 
 	FRotator SpawnRotation;
 	FVector SpawnLocation;

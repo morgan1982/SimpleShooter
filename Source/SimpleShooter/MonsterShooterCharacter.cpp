@@ -20,7 +20,7 @@ AMonsterShooterCharacter::AMonsterShooterCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	// Enables air mobility values 0 to 1;
+	// Enables air mobility values 0 to 1; //Todo: changing the value from editor does not seem to working 
 	AMonsterShooterCharacter::GetCharacterMovement()->AirControl = JumpMovement;
 
 	GetCapsuleComponent()->InitCapsuleSize(40.0f, 95.0f);
@@ -102,12 +102,16 @@ void AMonsterShooterCharacter::SetupPlayerInputComponent(UInputComponent* Player
 
 void AMonsterShooterCharacter::OnLeftMouse()
 {
+	Projectile->GetDefaultObject<AProjectile>()->ProjectileInitialSpeed = 3500.0f;
+	Projectile->GetDefaultObject<AProjectile>()->ProjectileMaxSpeed = 6000.0f;
 	OnFire(Projectile, FireSound);
 }
 
 void AMonsterShooterCharacter::OnRightMouse()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Alternate Fire!!!"));
+	Projectile->GetDefaultObject<AProjectile>()->ProjectileInitialSpeed = 1000.0f;
+	Projectile->GetDefaultObject<AProjectile>()->ProjectileMaxSpeed = 6000.0f;
+
 	OnFire(Projectile, AlterFireSound);
 }
 

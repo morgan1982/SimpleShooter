@@ -20,24 +20,31 @@ AProjectile::AProjectile()
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("Projectile Movemement"));
 
 	ProjectileMovement->UpdatedComponent = CollisionSphere;
-	// TODO: adjustment from the user is not working for initial and max speed. 
-	//ProjectileMovement->InitialSpeed = ProjectileInitialSpeed;
-	//ProjectileMovement->MaxSpeed = ProjectileMaxSpeed;
+
 	
-	ProjectileMovement->InitialSpeed = 2000.0f;
+	ProjectileMovement->InitialSpeed = 3000.0f;
 	ProjectileMovement->MaxSpeed = 6000.0f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = true;
+
+
 
 	// lifespan of projectile in seconds
 	InitialLifeSpan = 5.0f;
 
 }
 
+void AProjectile::OnConstruction(const FTransform& Transform)
+{
+	ProjectileMovement->InitialSpeed = ProjectileInitialSpeed;
+	ProjectileMovement->MaxSpeed = ProjectileMaxSpeed;
+}
+
 // Called when the game starts or when spawned
 void AProjectile::BeginPlay()
 {
 	Super::BeginPlay();
+
 
 	CollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &AProjectile::OnHit);
 	
