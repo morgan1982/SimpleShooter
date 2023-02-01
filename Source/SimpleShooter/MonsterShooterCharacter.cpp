@@ -12,6 +12,8 @@
 #include "Kismet/GameplayStatics.h"
 #include "MonsterShooterGameMode.h"
 
+
+
 // Sets default values
 AMonsterShooterCharacter::AMonsterShooterCharacter()
 {
@@ -88,23 +90,36 @@ void AMonsterShooterCharacter::SetupPlayerInputComponent(UInputComponent* Player
 	PlayerInputComponent->BindAction("Jump", IE_Pressed, this, &ACharacter::Jump);
 	PlayerInputComponent->BindAction("Jump", IE_Released, this, &ACharacter::StopJumping);
 
-	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMonsterShooterCharacter::OnFire);
-	PlayerInputComponent->BindAction("AlterFire", IE_Pressed, this, &AMonsterShooterCharacter::OnAlterFire);
+	PlayerInputComponent->BindAction("Fire", IE_Pressed, this, &AMonsterShooterCharacter::OnLeftMouse);
+	PlayerInputComponent->BindAction("AlterFire", IE_Pressed, this, &AMonsterShooterCharacter::OnRightMouse);
 
 	PlayerInputComponent->BindAxis("MoveForward", this, &AMonsterShooterCharacter::MoveForward);
 	PlayerInputComponent->BindAxis("MoveRight", this, &AMonsterShooterCharacter::MoveRight);
 
 	PlayerInputComponent->BindAxis("Turn", this, &AMonsterShooterCharacter::TurnAtRate);
 	PlayerInputComponent->BindAxis("LookUp", this, &AMonsterShooterCharacter::LookAtRate);
-} 
-void AMonsterShooterCharacter::OnFire()
+}
+
+void AMonsterShooterCharacter::OnLeftMouse()
+{
+	OnFire(Projectile, FireSound);
+}
+
+void AMonsterShooterCharacter::OnRightMouse()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Alternate Fire!!!"));
+	OnFire(Projectile, AlterFireSound);
+}
+
+
+void AMonsterShooterCharacter::OnFire(TSubclassOf<class AProjectile> MyProjectile, USoundBase* sound)
 {
 	if (World != NULL)
 	{
 		SpawnRotation = GetControlRotation();
 
 		SpawnLocation = ((MuzzleLocation != nullptr) ?
-			MuzzleLocation->GetComponentLocation()   :
+			MuzzleLocation->GetComponentLocation() :
 			GetActorLocation()) + SpawnRotation.RotateVector(GunOffset);
 
 		FActorSpawnParameters ActorSpawnParams;
@@ -115,7 +130,7 @@ void AMonsterShooterCharacter::OnFire()
 
 		if (FireSound != NULL)
 		{
-			UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+			UGameplayStatics::PlaySoundAtLocation(this, sound, GetActorLocation());
 		}
 
 		if (FireAnimation != NULL && AnimInstance != NULL)
@@ -123,11 +138,6 @@ void AMonsterShooterCharacter::OnFire()
 			AnimInstance->Montage_Play(FireAnimation, 1.0f);
 		}
 	}
-}
-
-void AMonsterShooterCharacter::OnAlterFire()
-{
-	UE_LOG(LogTemp, Warning, TEXT("Alternate Fire!!!"));
 }
 
 void AMonsterShooterCharacter::MoveForward(float Value)

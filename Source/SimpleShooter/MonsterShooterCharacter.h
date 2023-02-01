@@ -52,8 +52,9 @@ public:
 
 protected:
 
-	void OnFire();
-	void OnAlterFire();
+	void OnFire(TSubclassOf<class AProjectile> MyProjectile, USoundBase* sound);
+	void OnLeftMouse();
+	void OnRightMouse();
 	void MoveForward(float Value);
 	void MoveRight(float Value);
 
@@ -66,7 +67,10 @@ public:
 		TSubclassOf<class AProjectile> Projectile;
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
-		class USoundBase* FireSound;
+		class USoundBase* FireSound;	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Gameplay)
+		class USoundBase* AlterFireSound;
 
 	UPROPERTY(EditAnywhere, BluePrintReadWrite, Category = Gameplay)
 		class UAnimMontage* FireAnimation;
