@@ -33,7 +33,7 @@ ABot_One::ABot_One()
 	AIPerComp->OnPerceptionUpdated.AddDynamic(this, &ABot_One::OnSensed);
 
 	CurrentVelocity = FVector::ZeroVector;
-	MovementSpeed = 375.0f;
+	MovementSpeed = 200.0f;
 
 	DistanceSquared = BIG_NUMBER;
 }
@@ -143,5 +143,11 @@ void ABot_One::SetNewRotation(FVector TargetPosition, FVector CurrentPosition)
 
 void ABot_One::DealDamage(float DamageAmount)
 {
+	Health -= DamageAmount;
+
+	if (Health >= 0.0f)
+	{
+		Destroy();
+	}
 }
 
