@@ -91,6 +91,12 @@ void ABot_One::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void ABot_One::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
+	AMonsterShooterCharacter* Char = Cast<AMonsterShooterCharacter>(OtherActor);
+
+	if (Char)
+	{
+		Char->DealDamage(DamageValue);
+	}
 
 }
 
@@ -145,7 +151,7 @@ void ABot_One::DealDamage(float DamageAmount)
 {
 	Health -= DamageAmount;
 
-	if (Health >= 0.0f)
+	if (Health <= 0.0f)
 	{
 		Destroy();
 	}

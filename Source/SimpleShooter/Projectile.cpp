@@ -5,6 +5,8 @@
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 
+#include "Bot_One.h"
+
 // Sets default values
 AProjectile::AProjectile()
 {
@@ -34,6 +36,7 @@ AProjectile::AProjectile()
 
 }
 
+// with this method ititial and max can set via the editor!!
 void AProjectile::OnConstruction(const FTransform& Transform)
 {
 	ProjectileMovement->InitialSpeed = ProjectileInitialSpeed;
@@ -59,5 +62,12 @@ void AProjectile::Tick(float DeltaTime)
 
 void AProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& Hit)
 {
+	ABot_One* Enemy = Cast<ABot_One>(OtherActor);
+	if (Enemy)
+	{
+		Enemy->DealDamage(DamageValue);
+		Destroy(); // to destroy the prjectile after touching the enemy
+	}
+
 }
 

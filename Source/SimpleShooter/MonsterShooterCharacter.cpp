@@ -176,6 +176,13 @@ void AMonsterShooterCharacter::DealDamage(float DamageAmount)
 
 	if (Health <= 0.0f)
 	{
+		AMonsterShooterGameMode* MyGameMode = Cast<AMonsterShooterGameMode>(UGameplayStatics::GetGameMode(GetWorld()));
+
+		if (MyGameMode)
+		{
+			MyGameMode->RestartGameplay(false);
+		}
+
 		Destroy();
 	}
 }
